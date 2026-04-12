@@ -9,7 +9,6 @@ consumer = KafkaConsumer(
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
 
-# przechowywanie zdarzeń per user
 user_events = defaultdict(deque)
 
 WINDOW_SECONDS = 60
@@ -24,11 +23,9 @@ for message in consumer:
     events = user_events[user_id]
     events.append(tx_time)
 
-    # usuwamy stare zdarzenia (>60s)
     while events and (tx_time - events[0]).total_seconds() > WINDOW_SECONDS:
         events.popleft()
 
-    # ALERT jeśli więcej niż 3 w 60 sekund
     if len(events) > THRESHOLD:
         print(f"🚨 ALERT: user {user_id} zrobił {len(events)} transakcji w 60s")
         print(tx)
