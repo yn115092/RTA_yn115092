@@ -1,7 +1,7 @@
 from kafka import KafkaConsumer
 import json
 from collections import defaultdict, deque
-from datetime import datetim
+from datetime import datetime
 
 consumer = KafkaConsumer(
     'transactions',
@@ -27,5 +27,5 @@ for message in consumer:
         events.popleft()
 
     if len(events) > THRESHOLD:
-        print(f"🚨 ALERT: user {user_id} zrobił {len(events)} transakcji w 60s")
+        print(f"ALERT: user {user_id} zrobił {len(events)} transakcji w 60s")
         print(tx)
